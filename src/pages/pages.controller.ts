@@ -53,7 +53,6 @@ export class PagesController {
   @Delete('/:id')
   async deletePage(@Param('id') id : string){
     const page = await this.pagesService.deletePage(id)
-    console.log(page)
     return page;
   }
 }

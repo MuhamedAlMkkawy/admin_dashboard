@@ -5,6 +5,7 @@ import { PagesModule } from './pages/pages.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Pages } from './pages/entities/pages.entities';
 import { ConfigModule } from '@nestjs/config';
+import { SectionsModule } from './sections/sections.module';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { ConfigModule } from '@nestjs/config';
       autoLoadEntities: true,
       entities: [Pages],
     }),
-    PagesModule
+    PagesModule,
+    SectionsModule
   ],
   controllers: [AppController],
   providers: [AppService],
