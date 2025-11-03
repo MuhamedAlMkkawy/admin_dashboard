@@ -37,7 +37,46 @@ export class PagesService {
 
     return await this.repo.save(newPage);
   }
+
+
+
   // [ 4 ] Update Page
+  async updatePage (id : string , name : string) {
+    const updatedPage = await this.repo.findOneBy({ _id: new (require('mongodb').ObjectId)(id) });
+
+    if(!updatedPage){
+      throw new NotFoundException('Page Not Found')
+    }
+
+    await this.repo.update({_id: new (require('mongodb')).ObjectId(id)}, {name : name});
+
+
+    const newPage = await this.repo.findOneBy({ _id: new (require('mongodb').ObjectId)(id) });
+
+
+    return {
+      message : 'Page Is Updated Successfully',
+      data : newPage
+    };
+  }
+
+
+
   // [ 5 ] Delete Page
-  
+  async deletePage(id : string){
+    const page = await this.repo.findOneBy({_id : new (require('mongodb').ObjectId)(id)})
+
+
+    if(!page){
+      throw new NotFoundException('Page Not Found')
+    }
+
+    await this.repo.delete(page);
+
+
+    return {
+      message : 'Page is Deleted SuccessFully!',
+      data : null
+    }
+  }
 } 

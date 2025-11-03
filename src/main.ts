@@ -21,7 +21,7 @@ async function bootstrap() {
     // 👇 Interceptor لتوحيد رسائل النجاح
   app.useGlobalInterceptors(new ResponseInterceptor());
 
-  console.log('✅ ENV MONGODB_URI:', process.env.MONGO_URL);
+  // console.log('✅ ENV MONGODB_URI:', process.env.MONGO_URL);
 
   // 👇 Filter لتوحيد رسائل الخطأ
   // app.useGlobalFilters(new AllExceptionsFilter());

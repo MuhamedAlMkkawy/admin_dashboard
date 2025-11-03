@@ -12,13 +12,18 @@ export class ResponseInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context.switchToHttp().getRequest();
 
-    // Extract pagination info from query (or use defaults)
+    // Extract pagination info from query (defaults)
     const page = parseInt(request.query.page, 10) || 1;
     const limit = parseInt(request.query.limit, 10) || 15;
 
     return next.handle().pipe(
       map((data) => {
-        // Handle array data (e.g. product lists)
+        // 🔹 If controller returns { status, message, data } already → skip wrapping
+        if (data?.status && data?.data !== undefined) {
+          return data;
+        }
+
+        // 🔹 Handle pagination for array data
         if (Array.isArray(data)) {
           const totalItems = data.length;
           const totalPages = Math.ceil(totalItems / limit);
@@ -39,11 +44,20 @@ export class ResponseInterceptor implements NestInterceptor {
           };
         }
 
-        // Handle single item or other responses
+        // 🔹 If controller returned an object with { message, data } → merge safely
+        if (data && typeof data === 'object' && 'message' in data && 'data' in data) {
+          return {
+            status: 'success',
+            message: data.message,
+            data: data.data,
+          };
+        }
+
+        // 🔹 Default fallback for single response values
         return {
           status: 'success',
-          message: data?.message || 'Data Sent Successfully',
-          data: data?.data ?? data,
+          message: 'Data Sent Successfully',
+          data: data ?? null,
         };
       }),
     );
