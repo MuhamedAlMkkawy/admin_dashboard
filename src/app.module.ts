@@ -5,7 +5,8 @@ import { PagesModule } from './pages/pages.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Pages } from './pages/entities/pages.entities';
 import { ConfigModule } from '@nestjs/config';
-import { SectionsModule } from './sections/sections.module';
+import { FeaturesModule } from './features/features.module';
+import { Features } from './features/entities/features.entities';
 
 @Module({
   imports: [
@@ -18,10 +19,10 @@ import { SectionsModule } from './sections/sections.module';
       url: process.env.MONGO_URL,
       synchronize: true, // only for development
       autoLoadEntities: true,
-      entities: [Pages],
+      entities: [Pages , Features],
     }),
     PagesModule,
-    SectionsModule
+    FeaturesModule
   ],
   controllers: [AppController],
   providers: [AppService],
