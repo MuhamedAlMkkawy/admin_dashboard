@@ -3,7 +3,6 @@ import { FeaturesService } from './features.service';
 import { CreateFeatureDto } from './dtos/createFeatures.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { TransformFlatToNestedInterceptor } from 'src/interceptors/TransformArrays.interceptor';
-import { UpdateFeatureDto } from './dtos/UpdateFeatures.dto';
 
 @Controller('features')
 @UseInterceptors(FileInterceptor(''))

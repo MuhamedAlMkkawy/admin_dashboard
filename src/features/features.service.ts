@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Features } from './entities/features.entities';
 import { Repository } from 'typeorm';
 import { CreateFeatureDto } from './dtos/createFeatures.dto';
-import { UpdateFeatureDto } from './dtos/UpdateFeatures.dto';
 
 @Injectable()
 export class FeaturesService {

@@ -7,6 +7,8 @@ import { Pages } from './pages/entities/pages.entities';
 import { ConfigModule } from '@nestjs/config';
 import { FeaturesModule } from './features/features.module';
 import { Features } from './features/entities/features.entities';
+import { StatisticsModule } from './statistics/statistics.module';
+import { Statistics } from './statistics/entities/statistics.entities';
 
 @Module({
   imports: [
@@ -19,10 +21,11 @@ import { Features } from './features/entities/features.entities';
       url: process.env.MONGO_URL,
       synchronize: true, // only for development
       autoLoadEntities: true,
-      entities: [Pages , Features],
+      entities: [Pages , Features , Statistics],
     }),
     PagesModule,
-    FeaturesModule
+    FeaturesModule,
+    StatisticsModule
   ],
   controllers: [AppController],
   providers: [AppService],

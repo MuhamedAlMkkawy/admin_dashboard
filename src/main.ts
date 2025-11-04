@@ -3,7 +3,8 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { TimeoutInterceptor } from './interceptors/timeout.interceptor';
 import { ResponseInterceptor } from './interceptors/response.interceptor';
-import { TransformFlatToNestedInterceptor } from './interceptors/TransformArrays.interceptor';
+import * as express from 'express';
+import { join } from 'path';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -27,7 +28,8 @@ async function bootstrap() {
   // 👇 Filter لتوحيد رسائل الخطأ
   // app.useGlobalFilters(new AllExceptionsFilter());
 
-
+  // Serve uploaded files
+  app.use('/uploads', express.static(join(__dirname, '..', 'uploads')));
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
