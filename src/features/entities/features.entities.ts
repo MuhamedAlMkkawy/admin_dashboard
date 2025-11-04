@@ -1,10 +1,9 @@
-import { ObjectId } from "mongodb";
-import { Column, Entity, ObjectIdColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Features {
-  @ObjectIdColumn()
-  _id: ObjectId;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column()
   name: string;
@@ -15,11 +14,12 @@ export class Features {
   @Column()
   description: string;
 
-  @Column('array-json') // For MongoDB, you can also use 'simple-json'
+  // Use 'simple-json' or 'json' instead of 'array-json'
+  @Column({ type: 'simple-json', nullable: true })
   items: Array<{
+    id: number;
     icon?: string;
     title: string;
     description: string;
   }>;
-
 }

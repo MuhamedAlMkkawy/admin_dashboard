@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { Features } from './entities/features.entities';
 import { Repository } from 'typeorm';
-import { CreateFeatureDto } from './dtos/features.dto';
+import { CreateFeatureDto } from './dtos/createFeatures.dto';
 
 @Injectable()
 export class FeaturesService {
@@ -27,24 +27,18 @@ export class FeaturesService {
 
   // [ 2 ] Add a new feature
   async addFeatures(data : CreateFeatureDto){
-    const isFeaeturesExist = await this.repo.find();
-
-    if(isFeaeturesExist){
-      throw new BadRequestException('Features already exists');
+    const isFeaturesExisted = await this.repo.find();
+    
+    if(isFeaturesExisted.length === 1 ){
+      throw new BadRequestException('Features already exist');
     }
 
-
-    const features = this.repo.create(data);
-
-    if(!features){
-      throw new NotFoundException('Could not create features');
-    }
-
+    const features = this.repo.create({id: 1 , ...data});
 
     const addedFeatures = await this.repo.save(features);
 
     return addedFeatures;
   }
-  // [ 3 ] Update a feature5
+  // [ 3 ] Update a feature
   // [ 4 ] Delete a feature
 }
