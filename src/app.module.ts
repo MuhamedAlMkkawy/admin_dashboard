@@ -11,6 +11,8 @@ import { StatisticsModule } from './statistics/statistics.module';
 import { Statistics } from './statistics/entities/statistics.entities';
 import { ClientsModule } from './clients/clients.module';
 import { Clients } from './clients/entities/clients.entities';
+import { PortalsModule } from './portals/portals.module';
+import { Portals } from './portals/entities/portals.entities';
 
 @Module({
   imports: [
@@ -23,12 +25,13 @@ import { Clients } from './clients/entities/clients.entities';
       url: process.env.MONGO_URL,
       synchronize: true, // only for development
       autoLoadEntities: true,
-      entities: [Pages , Features , Statistics , Clients],
+      entities: [Pages , Features , Statistics , Clients , Portals],
     }),
     PagesModule,
     FeaturesModule,
     StatisticsModule,
-    ClientsModule
+    ClientsModule,
+    PortalsModule
   ],
   controllers: [AppController],
   providers: [AppService],
