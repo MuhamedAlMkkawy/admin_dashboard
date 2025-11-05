@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Post, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Patch, Post, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { PortalsService } from './portals.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -51,5 +51,17 @@ export class PortalsController {
 
     return portalsData;
   }
+
+
+
   // [ 3 ] Update Portals Section
+  @Patch()
+  async updatePortalsSection(@Body() body : any , @UploadedFiles() files : Array<Express.Multer.File>){
+    const updatedData = Object.assign({} , body)
+    if(files.length > 0){
+      updatedData.images = files.map((file, index) => ({id : index+1 ,url: `/uploads/${file.filename}`}))
+    }
+    
+    return await this.portalService.updatePortalsSection(updatedData)
+  }
 }

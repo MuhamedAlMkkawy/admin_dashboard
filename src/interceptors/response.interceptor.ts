@@ -57,7 +57,7 @@ export class ResponseInterceptor implements NestInterceptor {
         return {
           status: 'success',
           message: 'Data Sent Successfully',
-          data: data ?? null,
+          data: data !== null ? data : undefined,
         };
       }),
     );
