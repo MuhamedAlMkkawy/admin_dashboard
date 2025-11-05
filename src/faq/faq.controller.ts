@@ -3,7 +3,6 @@ import { FaqService } from './faq.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { TransformFlatToNestedInterceptor } from 'src/interceptors/TransformArrays.interceptor';
 import { CreateFaqDto } from './dtos/createFaq.dto';
-import { UpdateFaqDto } from './dtos/updateFaq.dto';
 
 @Controller('faq')
 @UseInterceptors(TransformFlatToNestedInterceptor)
