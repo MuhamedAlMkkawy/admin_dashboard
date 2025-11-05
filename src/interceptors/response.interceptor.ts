@@ -49,7 +49,7 @@ export class ResponseInterceptor implements NestInterceptor {
           return {
             status: 'success',
             message: data.message,
-            data: data.data,
+            data: data.data !== null ? data.data : undefined,
           };
         }
 
