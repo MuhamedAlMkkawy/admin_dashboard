@@ -13,6 +13,7 @@ import { ClientsModule } from './clients/clients.module';
 import { Clients } from './clients/entities/clients.entities';
 import { PortalsModule } from './portals/portals.module';
 import { Portals } from './portals/entities/portals.entities';
+import { FaqModule } from './faq/faq.module';
 
 @Module({
   imports: [
@@ -31,7 +32,8 @@ import { Portals } from './portals/entities/portals.entities';
     FeaturesModule,
     StatisticsModule,
     ClientsModule,
-    PortalsModule
+    PortalsModule,
+    FaqModule
   ],
   controllers: [AppController],
   providers: [AppService],
