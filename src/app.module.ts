@@ -19,6 +19,8 @@ import { HomeModule } from './home/home.module';
 import { Home } from './home/entities/home.entities';
 import { AboutModule } from './about/about.module';
 import { About } from './about/entities/about.entities';
+import { PortalsPageModule } from './portals_page/portals-page.module';
+import { PortalsPage } from './portals_page/entities/PortalsPage.entities';
 
 @Module({
   imports: [
@@ -39,7 +41,8 @@ import { About } from './about/entities/about.entities';
         Portals , 
         Faq,
         Home,
-        About
+        About,
+        PortalsPage
       ],
     }),
     PagesModule,
@@ -49,7 +52,8 @@ import { About } from './about/entities/about.entities';
     PortalsModule,
     FaqModule,
     HomeModule,
-    AboutModule
+    AboutModule,
+    PortalsPageModule
   ],
   controllers: [AppController],
   providers: [AppService],
