@@ -54,25 +54,25 @@ export class HomeController {
   // [ 3 ] Update Home Page 's Data
   @Patch()
   @UseInterceptors(
-  AnyFilesInterceptor({
-    storage: diskStorage({
-      destination: './uploads',
-      filename: (req, file, cb) => {
-        const uniqueSuffix =
-          Date.now() + '-' + Math.round(Math.random() * 1e9);
-        cb(null, uniqueSuffix + extname(file.originalname));
+    AnyFilesInterceptor({
+      storage: diskStorage({
+        destination: './uploads',
+        filename: (req, file, cb) => {
+          const uniqueSuffix =
+            Date.now() + '-' + Math.round(Math.random() * 1e9);
+          cb(null, uniqueSuffix + extname(file.originalname));
+        },
+      }),
+      fileFilter: (req, file, cb) => {
+        if (!file.mimetype.match(/\/(jpg|jpeg|png|webp)$/)) {
+          return cb(new Error('Only image files are allowed!'), false);
+        }
+        cb(null, true);
       },
     }),
-    fileFilter: (req, file, cb) => {
-      if (!file.mimetype.match(/\/(jpg|jpeg|png|webp)$/)) {
-        return cb(new Error('Only image files are allowed!'), false);
-      }
-      cb(null, true);
-    },
-  }),
-  TransformFlatToNestedInterceptor,
-  MergeFileFieldsInterceptor
-)
+    TransformFlatToNestedInterceptor,
+    MergeFileFieldsInterceptor
+  )
   async updateHomePage(@Body() body : any , @UploadedFiles() files : Array<Express.Multer.File>) {
     if(!body) {
       throw new BadRequestException('No Data Found To Update')
