@@ -32,11 +32,11 @@ export class FaqController {
   // [ 3 ] Update Faq Section 
   @Patch()
   async updateFaqSection(@Body() body : any){
-  if (!body.badge && !body.title && (!body.items || body.items.length === 0)) {
-    throw new BadRequestException('Body cannot be empty');
-  }
-  
+    if (!body.badge && !body.title && (!body.items || body.items.length === 0)) {
+      throw new BadRequestException('Body cannot be empty');
+    }
+    
 
-  return this.faqService.updateFaq(body);
+    return this.faqService.updateFaq(body);
   }
 }

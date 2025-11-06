@@ -15,6 +15,8 @@ import { PortalsModule } from './portals/portals.module';
 import { Portals } from './portals/entities/portals.entities';
 import { FaqModule } from './faq/faq.module';
 import { Faq } from './faq/entities/faq.entities';
+import { HomeModule } from './home/home.module';
+import { Home } from './home/entities/home.entities';
 
 @Module({
   imports: [
@@ -27,14 +29,23 @@ import { Faq } from './faq/entities/faq.entities';
       url: process.env.MONGO_URL,
       synchronize: true, // only for development
       autoLoadEntities: true,
-      entities: [Pages , Features , Statistics , Clients , Portals , Faq],
+      entities: [
+        Pages , 
+        Features , 
+        Statistics , 
+        Clients , 
+        Portals , 
+        Faq,
+        Home
+      ],
     }),
     PagesModule,
     FeaturesModule,
     StatisticsModule,
     ClientsModule,
     PortalsModule,
-    FaqModule
+    FaqModule,
+    HomeModule
   ],
   controllers: [AppController],
   providers: [AppService],

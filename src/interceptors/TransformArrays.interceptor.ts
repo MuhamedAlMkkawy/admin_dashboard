@@ -1,4 +1,9 @@
-import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
+import {
+  Injectable,
+  NestInterceptor,
+  ExecutionContext,
+  CallHandler,
+} from '@nestjs/common';
 import { Observable } from 'rxjs';
 
 @Injectable()
@@ -6,116 +11,49 @@ export class TransformFlatToNestedInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context.switchToHttp().getRequest();
 
-    // Transform request body before it reaches the controller
     if (request.body && typeof request.body === 'object') {
-      request.body = this.transformData(request.body);
+      request.body = this.flattenToNested(request.body);
     }
 
     return next.handle();
   }
 
-  private transformData(data: any): any {
-    if (data === null || data === undefined) return data;
+  private flattenToNested(flat: Record<string, any>): any {
+    const nested: Record<string, any> = {};
 
-    if (Array.isArray(data)) {
-      return data.map((item, i) => {
-        const transformed = this.transformObject(item);
-        // Add an id automatically (starting from 1)
-        if (!('id' in transformed)) {
-          transformed.id = i + 1;
-        }
-        return transformed;
-      });
-    }
+    for (const flatKey in flat) {
+      // ✅ Safe key check
+      if (!Object.prototype.hasOwnProperty.call(flat, flatKey)) continue;
 
-    if (typeof data === 'object') {
-      return this.transformObject(data);
-    }
+      const pathParts = flatKey.split('.');
+      let current = nested;
 
-    return data;
-  }
+      for (let i = 0; i < pathParts.length; i++) {
+        const part = pathParts[i];
 
-  private transformObject(obj: any): any {
-    if (!obj || typeof obj !== 'object' || Array.isArray(obj)) {
-      return obj;
-    }
+        // Match something like "heroSection[0]"
+        const arrayMatch = part.match(/^(\w+)\[(\d+)\]$/);
 
-    const transformed = { ...obj };
+        if (arrayMatch) {
+          const [, arrName, indexStr] = arrayMatch;
+          const index = parseInt(indexStr, 10);
 
-    // Handle arrays first
-    this.transformArrayProperties(transformed);
+          if (!current[arrName]) current[arrName] = [];
+          if (!current[arrName][index]) current[arrName][index] = {};
 
-    // Recursively handle nested objects
-    for (const key in transformed) {
-      if (transformed.hasOwnProperty(key)) {
-        transformed[key] = this.transformData(transformed[key]);
-      }
-    }
-
-    return transformed;
-  }
-
-  private transformArrayProperties(obj: any): void {
-    const arrayPatterns = new Map<string, any[]>();
-
-    for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        // Match patterns like: items[0].title, items[0].data.name, etc.
-        const match = key.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\[(\d+)\](?:\.?([\w\.]+))?$/);
-        if (match) {
-          const [, arrayName, indexStr, propertyPath] = match;
-          const arrayIndex = parseInt(indexStr, 10);
-          if (isNaN(arrayIndex)) continue;
-
-          if (!arrayPatterns.has(arrayName)) arrayPatterns.set(arrayName, []);
-
-          const array = arrayPatterns.get(arrayName)!;
-          while (array.length <= arrayIndex) {
-            array.push({});
-          }
-
-          if (propertyPath) {
-            this.setNestedProperty(array[arrayIndex], propertyPath, obj[key]);
+          current = current[arrName][index];
+        } else {
+          // Last part → assign the actual value
+          if (i === pathParts.length - 1) {
+            current[part] = flat[flatKey];
           } else {
-            Object.assign(array[arrayIndex], obj[key]);
+            if (!current[part]) current[part] = {};
+            current = current[part];
           }
-
-          delete obj[key];
         }
       }
     }
 
-    // Finalize arrays: add IDs
-    for (const [arrayName, array] of arrayPatterns) {
-      const validArray = array
-        .filter(item => item && typeof item === 'object' && Object.keys(item).length > 0)
-        .map((item, index) => {
-          // Add `id` if missing
-          if (!('id' in item)) {
-            item.id = index + 1;
-          }
-          return item;
-        });
-
-      if (validArray.length > 0) {
-        obj[arrayName] = validArray;
-      }
-    }
-  }
-
-  private setNestedProperty(obj: any, path: string, value: any): void {
-    const parts = path.split('.');
-    let current = obj;
-
-    for (let i = 0; i < parts.length - 1; i++) {
-      const part = parts[i];
-      if (!current[part] || typeof current[part] !== 'object') {
-        current[part] = {};
-      }
-      current = current[part];
-    }
-
-    const lastPart = parts[parts.length - 1];
-    current[lastPart] = value;
+    return nested;
   }
 }
