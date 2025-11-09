@@ -5,6 +5,12 @@ import { TimeoutInterceptor } from './interceptors/timeout.interceptor';
 import { ResponseInterceptor } from './interceptors/response.interceptor';
 import * as express from 'express';
 import { join } from 'path';
+import { AuthGuard } from './guards/auth.guard';
+
+
+const cookieSession = require('cookie-session')
+
+
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -24,6 +30,14 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ResponseInterceptor());
 
   // console.log('✅ ENV MONGODB_URI:', process.env.MONGO_URL);
+
+
+  // TO MAKE THE APP USE THE COOKIE SESSIONS
+  app.use(cookieSession({
+    keys : ['user_token']
+  }));
+
+  app.useGlobalGuards(new AuthGuard())
 
   // 👇 Filter لتوحيد رسائل الخطأ
   // app.useGlobalFilters(new AllExceptionsFilter());

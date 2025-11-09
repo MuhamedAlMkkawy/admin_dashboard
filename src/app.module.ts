@@ -21,6 +21,8 @@ import { AboutModule } from './about/about.module';
 import { About } from './about/entities/about.entities';
 import { PortalsPageModule } from './portals_page/portals-page.module';
 import { PortalsPage } from './portals_page/entities/PortalsPage.entities';
+import { AuthModule } from './auth/auth.module';
+import { Users } from './auth/entities/users.entities';
 
 @Module({
   imports: [
@@ -42,7 +44,8 @@ import { PortalsPage } from './portals_page/entities/PortalsPage.entities';
         Faq,
         Home,
         About,
-        PortalsPage
+        PortalsPage,
+        Users
       ],
     }),
     PagesModule,
@@ -53,7 +56,8 @@ import { PortalsPage } from './portals_page/entities/PortalsPage.entities';
     FaqModule,
     HomeModule,
     AboutModule,
-    PortalsPageModule
+    PortalsPageModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],
