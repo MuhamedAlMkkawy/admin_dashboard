@@ -5,6 +5,9 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { TransformFlatToNestedInterceptor } from 'src/interceptors/TransformArrays.interceptor';
 import { MergeFileFieldsInterceptor } from 'src/interceptors/mergeFileFields.interceptor';
+import { CreatePortalsPageDto } from './dtos/createPortalsPageData.dto';
+import { plainToClass } from 'class-transformer';
+import { UpdatePortalsPageDto } from './dtos/updatePortalsPageData.dto';
 
 @Controller('portals_page')
 export class PortalsPageController {
@@ -42,12 +45,14 @@ export class PortalsPageController {
     TransformFlatToNestedInterceptor,
     MergeFileFieldsInterceptor
   )
-  async createPortalsPageData (@Body() body : any , @UploadedFiles() files : Array<Express.Multer.File>) {
+  async createPortalsPageData (@Body() body : any) {
     if(!body){
       throw new BadRequestException('You Must Add data to Continue...')
     }
 
-    return this.portalsPageService.createPortalsPageData(body)
+    const data = plainToClass(CreatePortalsPageDto , body)
+
+    return this.portalsPageService.createPortalsPageData(data)
   }
 
 
@@ -75,7 +80,7 @@ export class PortalsPageController {
     TransformFlatToNestedInterceptor,
     MergeFileFieldsInterceptor
   )
-  async updatePortalsPageData (@Body() body : any , @UploadedFiles() files : Array<Express.Multer.File>){
+  async updatePortalsPageData (@Body() body : UpdatePortalsPageDto ){
     if(!body){
       throw new NotFoundException('You should add data to continue... !!')
     }

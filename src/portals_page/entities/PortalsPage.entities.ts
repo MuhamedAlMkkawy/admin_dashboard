@@ -9,18 +9,18 @@ export class PortalsPage {
   @Column()
   portals : {
     id : number
-    badge : string
-    title : string
-    description : string
-    buttons : {title : string ,link : string}[]
+    badge : {en : string , ar : string}
+    title : {en : string , ar :string}
+    description : {en : string , ar :string}
+    buttons : {title : {en : string , ar :string} ,link : {en : string , ar :string}}[]
     image : string
   }[]
 
   @Column()
   mockup : {
-    title : string
-    description : string
-    button : {title : string , link : string}
+    title : {en : string , ar :string}
+    description : {en : string , ar :string}
+    button : {title : {en : string , ar :string} , link : string}
     image : string
   }
 }

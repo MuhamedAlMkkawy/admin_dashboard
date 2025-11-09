@@ -1,78 +1,100 @@
+import { IsArray, IsNumber, IsObject, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
-import {
-  IsArray,
-  IsNumber,
-  IsOptional,
-  IsString,
-  ValidateNested,
-} from 'class-validator';
 
-export class PortalButtonDto {
-  @IsString()
+class TitleDto {
   @IsOptional()
-  title?: string;
+  @IsString()
+  en?: string;
 
-  @IsString()
   @IsOptional()
+  @IsString()
+  ar?: string;
+}
+
+class ButtonDto {
+  @IsOptional()
+  @IsObject()
+  @ValidateNested()
+  @Type(() => TitleDto)
+  title?: TitleDto;
+
+  @IsOptional()
+  @IsString()
   link?: string;
 }
 
-export class PortalDto {
-  @IsNumber()
+class PortalDto {
   @IsOptional()
+  @IsNumber()
   id?: number;
 
-  @IsString()
   @IsOptional()
-  badge?: string;
+  @ValidateNested()
+  @Type(() => TitleDto)
+  badge?: TitleDto;
 
-  @IsString()
   @IsOptional()
-  title?: string;
+  @ValidateNested()
+  @Type(() => TitleDto)
+  title?: TitleDto;
 
-  @IsString()
   @IsOptional()
-  description?: string;
+  @ValidateNested()
+  @Type(() => TitleDto)
+  description?: TitleDto;
 
+  @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => PortalButtonDto)
-  @IsOptional()
-  buttons?: PortalButtonDto[];
+  @Type(() => ButtonDto)
+  buttons?: ButtonDto[];
 
-  @IsString()
   @IsOptional()
+  @IsString()
   image?: string;
 }
 
-export class MockupDto {
-  @IsString()
+class MockupButtonDto {
   @IsOptional()
-  title?: string;
-
-  @IsString()
-  @IsOptional()
-  description?: string;
-
   @ValidateNested()
-  @Type(() => PortalButtonDto)
-  @IsOptional()
-  button?: PortalButtonDto;
+  @Type(() => TitleDto)
+  title?: TitleDto;
 
-  @IsString()
   @IsOptional()
+  @IsString()
+  link?: string;
+}
+
+class MockupDto {
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => TitleDto)
+  title?: TitleDto;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => TitleDto)
+  description?: TitleDto;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => MockupButtonDto)
+  button?: MockupButtonDto;
+
+  @IsOptional()
+  @IsString()
   image?: string;
 }
 
 export class UpdatePortalsPageDto {
+  @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => PortalDto)
-  @IsOptional()
   portals?: PortalDto[];
 
+  @IsOptional()
   @ValidateNested()
   @Type(() => MockupDto)
-  @IsOptional()
   mockup?: MockupDto;
 }

@@ -23,16 +23,17 @@ export class PortalsPageService {
 
 
   // [ 2 ] Create Portals Page 's Content
-  async createPortalsPageData (body : CreatePortalsPageDto) {
+  async createPortalsPageData (body : any) {
     const portalsPage = await this.repo.find()
 
     if(portalsPage.length > 0){
       throw new BadRequestException('Portals Page Data is Already Found !!')
     }
 
-    const data = await this.repo.save(this.repo.create(body))
 
-    return data
+    const createdData = await this.repo.save(this.repo.create(body));
+
+    return createdData;
 
   }
 

@@ -44,29 +44,43 @@ export class StatisticsService {
 
 
   // [ 3 ] Update Statistics Section
-  async updateStatistics (id : string , body :UpdateStatisticsDto){
-    const statisticsItem = await this.repo.findOneBy({_id: new ObjectId(id.toString())})
-    
+  async updateStatistics(id: string, body: UpdateStatisticsDto) {
+    const statisticsItem = await this.repo.findOneBy({
+      _id: new ObjectId(id.toString()),
+    });
 
-    console.log(body)
-    if(!statisticsItem){
-      throw new NotFoundException('Statistics Item Not Found')
+    if (!statisticsItem) {
+      throw new NotFoundException('Statistics Item Not Found');
     }
-      
+
+    // دمج البيانات القديمة مع البيانات الجديدة من body
     const newData = { ...statisticsItem };
 
-    if (body.title) {
-      newData.title = {
-        ...statisticsItem.title,
-        ...body.title,
-      };
+    for (const key in body) {
+      if (body[key] !== undefined) {
+        // إذا كان الحقل كائن nested (مثل title أو description)
+        if (
+          typeof body[key] === 'object' &&
+          body[key] !== null &&
+          !Array.isArray(body[key])
+        ) {
+          newData[key] = {
+            ...statisticsItem[key],
+            ...body[key],
+          };
+        } else {
+          // الحقول العادية (string, number, boolean, array)
+          newData[key] = body[key];
+        }
+      }
     }
-    
-    await this.repo.update(id  ,  newData);
+
+    await this.repo.update(id, newData);
 
     return {
-      message : 'Statistics Updated Successfully',
-      data : await this.repo.findOneBy({_id: new ObjectId(id.toString())})
+      message: 'Statistics Updated Successfully',
+      data: await this.repo.findOneBy({ _id: new ObjectId(id.toString()) }),
     };
   }
+
 }
