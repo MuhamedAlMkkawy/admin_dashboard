@@ -16,5 +16,5 @@ export class Statistics {
 
 
   @Column()
-  title : string;
+  title : {ar : string , en : string};
 }
