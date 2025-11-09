@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Post, Session, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Patch, Post, Session, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { TransformFlatToNestedInterceptor } from 'src/interceptors/TransformArrays.interceptor';
 import { MergeFileFieldsInterceptor } from 'src/interceptors/mergeFileFields.interceptor';
@@ -9,6 +9,7 @@ import { SignUpDto } from './dtos/Signup.dto';
 import { Serialize } from 'src/interceptors/dataSerializor.interceptor';
 import { AuthResponce } from './dtos/AuthResponce.dto';
 import { LoginDto } from './dtos/Login.dto';
+import { ChangePasswordDto } from './dtos/ChangePassword.dto';
 
 @Controller('/')
 export class AuthController {
@@ -54,6 +55,7 @@ export class AuthController {
     const user = await this.authService.login(body)
 
     session.user_token = user.token
+    session.role = user.role
 
     return user;
   }
@@ -69,5 +71,16 @@ export class AuthController {
       message : 'You have logged out successfully!',
       data : null
     }
+  }
+
+
+  // [ 4 ] Forget Password
+  @Patch('/change_password')
+  @UseInterceptors(FileInterceptor(''))
+  async forgetPassword(@Body() body : ChangePasswordDto , @Session() session : any){
+    const user = await this.authService.changePassword(body , session.user_token)
+
+    session.user_token = null
+    return user;
   }
 }

@@ -6,6 +6,7 @@ import { ResponseInterceptor } from './interceptors/response.interceptor';
 import * as express from 'express';
 import { join } from 'path';
 import { AuthGuard } from './guards/auth.guard';
+import { PermissionsGuard } from './guards/permissions.guard';
 
 
 const cookieSession = require('cookie-session')
@@ -37,7 +38,7 @@ async function bootstrap() {
     keys : ['user_token']
   }));
 
-  app.useGlobalGuards(new AuthGuard())
+  app.useGlobalGuards(new AuthGuard() , new PermissionsGuard())
 
   // 👇 Filter لتوحيد رسائل الخطأ
   // app.useGlobalFilters(new AllExceptionsFilter());

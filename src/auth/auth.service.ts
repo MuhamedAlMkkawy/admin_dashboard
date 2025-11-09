@@ -8,6 +8,7 @@ import { promisify } from 'util';
 import * as crypto from 'crypto';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dtos/Login.dto';
+import { ChangePasswordDto } from './dtos/ChangePassword.dto';
 
 const scrypt = promisify(crypto.scrypt);
 
@@ -74,5 +75,45 @@ export class AuthService {
     }
 
     return existingUser
+  }
+
+
+
+  // [ 3 ] Change Password
+  async changePassword(body : ChangePasswordDto , token : string) {
+    const user = await this.repo.findOneBy({token : token})
+
+    if(!user){
+      throw new BadRequestException('Please Logging before retry')
+    }
+
+    const [ salt , hashedPassword ] = user.password.split('.');
+
+    const hash = (await scrypt(body.current_password , salt , 32)) as Buffer;
+    
+
+    if(hash.toString('hex') !== hashedPassword) {
+      throw new BadRequestException('Current Password is not correct')
+    }
+
+    if(body.new_password !== body.confirm_password){
+      throw new BadRequestException('New Password and Confirm Password don\'t match')
+    } 
+    
+    const newSalt = randomBytes(8).toString('hex');
+    const newHash = (await scrypt(body.new_password , salt , 32)) as Buffer;
+    const newPasswordHased = newSalt + '.' + newHash.toString('hex');
+
+    const userData = {
+      ...user ,
+      password  : newPasswordHased
+    }
+
+    await this.repo.update(user._id, userData);
+
+    return {
+      message : 'Password Updated Successfully , Login agin to continue',
+      data : null
+    }
   }
 }

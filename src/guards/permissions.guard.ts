@@ -1,16 +1,11 @@
 import { CanActivate, ForbiddenException, Injectable } from "@nestjs/common";
 
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class PermissionsGuard implements CanActivate {
   canActivate(context: any): boolean {
     const request = context.switchToHttp().getRequest();
-    // console.log('AuthGuard - User Token:', request.session.userToken);
 
-    const openRoutes = ['/login', '/signup' , '/change_password'];
-    if (openRoutes.includes(request.path)) {
-      return true; // allow without token
-    }
-
+    
     if(request.method === 'DELETE' && request.path !== '/logout' && request.session?.role === 1){
       throw new ForbiddenException('You do not have the permission to perform this action');
     }
