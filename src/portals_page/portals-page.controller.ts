@@ -78,9 +78,9 @@ export class PortalsPageController {
       },
     }),
     TransformFlatToNestedInterceptor,
-    MergeFileFieldsInterceptor
+    MergeFileFieldsInterceptor,
   )
-  async updatePortalsPageData (@Body() body : UpdatePortalsPageDto ){
+  async updatePortalsPageData (@Body() body : any ){
     if(!body){
       throw new NotFoundException('You should add data to continue... !!')
     }

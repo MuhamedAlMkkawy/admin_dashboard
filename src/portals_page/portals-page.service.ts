@@ -2,9 +2,8 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { PortalsPage } from './entities/PortalsPage.entities';
 import { Repository } from 'typeorm';
-import { CreatePortalsPageDto } from './dtos/createPortalsPageData.dto';
 import { UpdatePortalsPageDto } from './dtos/updatePortalsPageData.dto';
-import {merge} from 'lodash'
+import { merge , cloneDeep } from 'lodash'; 
 @Injectable()
 export class PortalsPageService {
   constructor(@InjectRepository(PortalsPage) private repo : Repository<PortalsPage>){}
@@ -40,28 +39,30 @@ export class PortalsPageService {
 
 
   // [ 3 ] Update Portals Page 's Content
-  async updatePortalsPageData(body : UpdatePortalsPageDto){
-    const portalsPage = await this.repo.find()
-    if(!portalsPage){
-      throw new BadRequestException('Portlas Page Data Not Found !!')
+  async updatePortalsPageData(body: UpdatePortalsPageDto) {
+    console.log(body)
+    // جلب بيانات الصفحة الموجودة (نفترض دائماً عنصر واحد)
+    const portalsPage = await this.repo.find();
+    if (!portalsPage || portalsPage.length === 0) {
+      throw new BadRequestException("Portals Page Data Not Found!!");
     }
 
-    const portalsID = portalsPage[0]._id
-    const portals = await this.repo.findOneBy({_id : portalsID})
+    const portalsID = portalsPage[0]._id;
 
-    if(!portals){
-      throw new NotFoundException('Portals Page \'s Data isn\'t Found !!!')
+    // جلب البيانات القديمة
+    const existingPortals = await this.repo.findOneBy({ _id: portalsID });
+    if (!existingPortals) {
+      throw new NotFoundException("Portals Page's Data isn't Found!!!");
     }
 
 
-    const updated = merge({} , portals , body)
+    // // حفظ البيانات المحدثة
+    // const savedData = await this.repo.update(portalsID , body);
 
-    const savedData = await this.repo.save(updated)
-
-    return {
-      message : 'Portals Page \'s Data is Updated SuccessFully..',
-      data : savedData
-    }
+    // return {
+    //   message: "Portals Page's Data is Updated Successfully..",
+    //   data: savedData,
+    // };
   }
 }
 
