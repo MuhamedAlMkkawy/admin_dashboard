@@ -11,14 +11,15 @@ import { map } from 'rxjs/operators';
 export class LanguageInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context.switchToHttp().getRequest();
-    const lang =
-      (request.query.lang ||
-        request.headers['accept-language'] ||
-        'en')
-        .toString()
-        .toLowerCase();
 
-    const selectedLang = ['ar', 'en'].includes(lang) ? lang : 'en';
+    // Get language from query or header (no default now)
+    const lang =
+      request.query.lang?.toString().toLowerCase() ||
+      request.headers['accept-language']?.toString().toLowerCase() ||
+      '';
+
+    // If it's a supported language
+    const selectedLang = ['ar', 'en'].includes(lang) ? lang : '';
 
     const localize = (obj: any): any => {
       if (Array.isArray(obj)) {
@@ -35,18 +36,20 @@ export class LanguageInterceptor implements NestInterceptor {
         return obj;
       }
 
+      // If no language is selected → return full multilingual object
+      if (!selectedLang) return obj;
+
       // If object has only { en, ar } → return selected language
       const keys = Object.keys(obj);
       if (keys.length === 2 && keys.includes('en') && keys.includes('ar')) {
         return obj[selectedLang] ?? obj['en'];
       }
 
-      // Otherwise, recursively process child fields
+      // Otherwise, recursively process deeper fields
       const result: any = {};
       for (const [key, value] of Object.entries(obj)) {
-        //  Skip touching _id field (MongoDB ObjectId)
         if (key === '_id') {
-          result[key] = value;
+          result[key] = value; // Skip touching _id
         } else {
           result[key] = localize(value);
         }

@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Patch, Post, UseInterceptors } from '@nes
 import { FeaturesService } from './features.service';
 import { CreateFeatureDto } from './dtos/createFeatures.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { TransformFlatToNestedInterceptor } from 'src/interceptors/TransformArrays.interceptor';
+import { TransformFlatToNestedInterceptor } from 'src/interceptors/TransformFlatToNested.interceptor';
 
 @Controller('features')
 @UseInterceptors(FileInterceptor(''))

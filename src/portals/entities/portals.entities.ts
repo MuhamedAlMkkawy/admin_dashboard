@@ -7,13 +7,13 @@ export class Portals {
   _id : ObjectId
 
   @Column()
-  badge : string
+  badge : {ar : string , en : string}
 
   @Column()
-  title : string
+  title : {ar : string , en : string}
 
   @Column()
-  description : string
+  description : {ar : string , en : string}
 
   @Column()
   images : string[]

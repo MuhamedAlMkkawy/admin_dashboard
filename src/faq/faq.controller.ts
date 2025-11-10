@@ -1,7 +1,7 @@
 import { BadRequestException, Body, Controller, Get, Patch, Post, UseInterceptors } from '@nestjs/common';
 import { FaqService } from './faq.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { TransformFlatToNestedInterceptor } from 'src/interceptors/TransformArrays.interceptor';
+import { TransformFlatToNestedInterceptor } from 'src/interceptors/TransformFlatToNested.interceptor';
 import { CreateFaqDto } from './dtos/createFaq.dto';
 
 @Controller('faq')

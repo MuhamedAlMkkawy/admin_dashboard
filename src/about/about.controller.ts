@@ -1,7 +1,7 @@
 import { BadRequestException, Body, Controller, Get, Patch, Post, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { AboutService } from './about.service';
 import { MergeFileFieldsInterceptor } from 'src/interceptors/mergeFileFields.interceptor';
-import { TransformFlatToNestedInterceptor } from 'src/interceptors/TransformArrays.interceptor';
+import { TransformFlatToNestedInterceptor } from 'src/interceptors/TransformFlatToNested.interceptor';
 import { extname } from 'path';
 import { diskStorage } from 'multer';
 import { AnyFilesInterceptor } from '@nestjs/platform-express';

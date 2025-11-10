@@ -2,9 +2,9 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Portals } from './entities/portals.entities';
 import { Repository } from 'typeorm';
-import { UpdateClientsSectionDto } from 'src/clients/dtos/updateClients.dto';
 import { CreatePortalsDto } from './dtos/createPortals.dto';
-
+import { UpdatePortalsDto } from './dtos/updatePortals.dto';
+import {merge} from 'lodash'
 @Injectable()
 export class PortalsService {
   constructor(@InjectRepository(Portals) private repo : Repository<Portals>) {}
@@ -40,20 +40,20 @@ export class PortalsService {
 
 
   // [ 3 ] UPDATE Portals Section
-  async updatePortalsSection(data : UpdateClientsSectionDto) {
+  async updatePortalsSection(data : UpdatePortalsDto) {
     const portals = await this.repo.find()
 
     if(!portals){
       throw new NotFoundException('The Portals Section isn\'t Found')
     }
 
-    const portalsSectionID = portals[0]._id
+    const portalsData = merge({} , portals[0] , data)
 
-    await this.repo.update({_id : portalsSectionID} , data)
+    const savedData = await this.repo.save(portalsData)
 
     return{
       message : 'Portals Section Updated Successfully',
-      data : await this.repo.findOneBy({_id : portalsSectionID})
+      data : savedData
     }
   }
 }

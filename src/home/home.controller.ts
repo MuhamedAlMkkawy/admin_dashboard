@@ -3,7 +3,7 @@ import { HomeService } from './home.service';
 import { AnyFilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
-import { TransformFlatToNestedInterceptor } from 'src/interceptors/TransformArrays.interceptor';
+import { TransformFlatToNestedInterceptor } from 'src/interceptors/TransformFlatToNested.interceptor';
 import { MergeFileFieldsInterceptor } from 'src/interceptors/mergeFileFields.interceptor';
 
 @Controller('home')

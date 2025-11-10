@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Patch, Post, Session, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { TransformFlatToNestedInterceptor } from 'src/interceptors/TransformArrays.interceptor';
+import { TransformFlatToNestedInterceptor } from 'src/interceptors/TransformFlatToNested.interceptor';
 import { MergeFileFieldsInterceptor } from 'src/interceptors/mergeFileFields.interceptor';
 import { AnyFilesInterceptor, FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';

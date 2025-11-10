@@ -3,6 +3,7 @@ import { PortalsService } from './portals.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { TransformFlatToNestedInterceptor } from 'src/interceptors/TransformFlatToNested.interceptor';
 
 @Controller('portals')
 @UseInterceptors(
@@ -21,6 +22,7 @@ import { extname } from 'path';
       cb(null, true);
     },
   }),
+  TransformFlatToNestedInterceptor
 )
 export class PortalsController {
   constructor(private portalService : PortalsService) {}
@@ -37,7 +39,11 @@ export class PortalsController {
 
   // [ 2 ] Post Portals Section
   @Post()
-  async postPortalsSection (@Body() body : any , @UploadedFiles() files : Array<Express.Multer.File>) {
+  async postPortalsSection (
+    @Body() body : any , 
+    @UploadedFiles() files : Array<Express.Multer.File>
+  ) {
+
     const portalsSectionData = {
       ...body,
       images : files.map((file, index) => ({id : index+1 ,url: `/uploads/${file.filename}`}))
@@ -46,6 +52,7 @@ export class PortalsController {
     if(portalsSectionData.length == 0){
       throw new BadRequestException('Please Fill All the fields!!')
     }
+    
 
     const portalsData = await this.portalService.postPortalsSection(portalsSectionData)
 
@@ -57,6 +64,10 @@ export class PortalsController {
   // [ 3 ] Update Portals Section
   @Patch()
   async updatePortalsSection(@Body() body : any , @UploadedFiles() files : Array<Express.Multer.File>){
+    if(!body){
+      throw new BadRequestException('You Must Add Data to Continue Updating')
+    }
+
     const updatedData = Object.assign({} , body)
     if(files.length > 0){
       updatedData.images = files.map((file, index) => ({id : index+1 ,url: `/uploads/${file.filename}`}))

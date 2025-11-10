@@ -2,8 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { PortalsPage } from './entities/PortalsPage.entities';
 import { Repository } from 'typeorm';
-import { UpdatePortalsPageDto } from './dtos/updatePortalsPageData.dto';
-import { merge , cloneDeep } from 'lodash'; 
+import { merge  } from 'lodash'; 
 @Injectable()
 export class PortalsPageService {
   constructor(@InjectRepository(PortalsPage) private repo : Repository<PortalsPage>){}
