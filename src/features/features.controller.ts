@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Param, Patch, Post, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Param, Patch, Post, UseInterceptors } from '@nestjs/common';
 import { FeaturesService } from './features.service';
-import { CreateFeatureDto } from './dtos/createFeatures.dto';
+import { CreateFeaturesDto } from './dtos/createFeatures.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { TransformFlatToNestedInterceptor } from 'src/interceptors/TransformFlatToNested.interceptor';
 
@@ -22,8 +22,13 @@ export class FeaturesController {
   // [ 2 ] Add Features Section
   @Post()
   @UseInterceptors(TransformFlatToNestedInterceptor) 
-  async addFeaturesSection(@Body() body : CreateFeatureDto){    
-    const features = await this.featuresService.addFeaturesSection(body);
+  async addFeaturesSection(@Body() body : CreateFeaturesDto){
+    const data = {
+      ...body , 
+      items : body.items.map((item , index) => ({id : index + 1 , ...item}))
+    }
+
+    const features = await this.featuresService.addFeaturesSection(data);
     
     return features;
   }
@@ -33,6 +38,9 @@ export class FeaturesController {
   @Patch()
   @UseInterceptors(TransformFlatToNestedInterceptor) 
   async updateFeaturesSection(@Body() body: any){
+    if(!body){
+      throw new BadRequestException('You Must Add Data to Continue...');
+    }
     const updatedFeaturesSection = await this.featuresService.updateFeaturesSection(body);
 
     return updatedFeaturesSection;

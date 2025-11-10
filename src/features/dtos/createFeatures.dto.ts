@@ -1,35 +1,45 @@
 import { Type } from 'class-transformer';
-import { IsArray, IsNumber, IsString, ValidateNested } from 'class-validator';
+import { IsArray, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
 
-export class FeatureItem {
-  @IsNumber()
-  id?: number;
+// ---- Nested DTOs ----
+export class LangStringDto {
+  @IsString()
+  ar: string;
 
   @IsString()
-  color?: string;
-
-  @IsString()
-  icon?: string;
-
-  @IsString()
-  title: string;
-
-  @IsString()
-  description: string;
+  en: string;
 }
 
-export class CreateFeatureDto {
-  @IsString()
-  name: string;
+export class FeatureItemDto {
+  @ValidateNested()
+  @Type(() => LangStringDto)
+  icon?: LangStringDto;
 
-  @IsString()
-  title: string;
+  @ValidateNested()
+  @Type(() => LangStringDto)
+  title: LangStringDto;
 
-  @IsString()
-  description: string;
+  @ValidateNested()
+  @Type(() => LangStringDto)
+  description: LangStringDto;
+}
+
+// ---- Main DTO ----
+export class CreateFeaturesDto {
+  @ValidateNested()
+  @Type(() => LangStringDto)
+  name: LangStringDto;
+
+  @ValidateNested()
+  @Type(() => LangStringDto)
+  title: LangStringDto;
+
+  @ValidateNested()
+  @Type(() => LangStringDto)
+  description: LangStringDto;
 
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => FeatureItem)
-  items: FeatureItem[];
+  @Type(() => FeatureItemDto)
+  items: FeatureItemDto[];
 }

@@ -1,9 +1,10 @@
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Features } from './entities/features.entities';
 import { Repository } from 'typeorm';
-import { CreateFeatureDto } from './dtos/createFeatures.dto';
-
+import { CreateFeaturesDto } from './dtos/createFeatures.dto';
+import {merge} from 'lodash'
+import { UpdateFeaturesDto } from './dtos/updateFeatures.dto';
 @Injectable()
 export class FeaturesService {
   constructor(
@@ -26,14 +27,14 @@ export class FeaturesService {
 
 
   // [ 2 ] Add Features Section
-  async addFeaturesSection(data : CreateFeatureDto){
+  async addFeaturesSection(data : CreateFeaturesDto){
     const isFeaturesExisted = await this.repo.find();
     
     if(isFeaturesExisted.length){
       throw new ForbiddenException('Features already existed');
     }
 
-    const features = this.repo.create({_id: 1 , ...data});
+    const features = this.repo.create(data);
 
 
     const addedFeatures = await this.repo.save(features);
@@ -44,26 +45,22 @@ export class FeaturesService {
 
 
   // [ 3 ] Update Features Section
-  async updateFeaturesSection(data: any) {
+  async updateFeaturesSection(data: UpdateFeaturesDto) {
     const featuresSection = await this.repo.find();
     
     if (!featuresSection.length) {
       throw new NotFoundException('No features section found to update');
     }
 
-    // Get the actual ID from the found entity
-    const featureId = featuresSection[0]._id;
-    
-
+    const updatedFeatures = merge({}, featuresSection[0], data);
     // Correct update syntax - update where _id matches, set the data
-    const updated = await this.repo.update(
-      { _id: featureId }, // Filter
-      data // Update data
-    );
+    
+    const updated = await this.repo.save(updatedFeatures);
+    
 
     return {
       message: 'Features section updated successfully',
-      data:  await this.repo.findOneBy({ _id: featureId })
+      data:  updated
     };
   }
   

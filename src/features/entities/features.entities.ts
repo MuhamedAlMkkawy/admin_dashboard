@@ -7,20 +7,20 @@ export class Features {
   _id: ObjectId;
   
   @Column()
-  name: string;
+  name: {ar : string , en : string};
 
   @Column()
-  title: string;
+  title: {ar : string , en : string};
 
   @Column()
-  description: string;
+  description: {ar : string , en : string};
 
   // Use 'simple-json' or 'json' instead of 'array-json'
-  @Column({ type: 'simple-json', nullable: true })
+  @Column()
   items: Array<{
     id: number;
-    icon?: string;
-    title: string;
-    description: string;
+    icon?: {ar : string , en : string};
+    title: {ar : string , en : string};
+    description: {ar : string , en : string};
   }>;
 }
