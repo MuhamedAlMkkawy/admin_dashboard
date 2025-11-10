@@ -9,6 +9,7 @@ import { AddStatisticsDto } from './dtos/AddStatistics.dto';
 import { Serialize } from 'src/interceptors/dataSerializor.interceptor';
 import { StatisticsResponceDto } from './dtos/StatisticsResponce.dto';
 import { UpdateStatisticsDto } from './dtos/UpdateStatistics.dto';
+import { LanguageInterceptor } from 'src/interceptors/languageHandle.interceptor';
 
 
 @Controller('statistics')
@@ -17,10 +18,10 @@ export class StatisticsController {
   
   // [ 1 ] Get All Statistics
   @Get()
+  @UseInterceptors(LanguageInterceptor)
   @Serialize(StatisticsResponceDto)
-  async getStatistics (@Req() req : any) {
-    const lang = req.headers['lang'] || req.query.lang || 'en';
-    const statistics = await this.statisticsService.getStatistics(lang)
+  async getStatistics () {
+    const statistics = await this.statisticsService.getStatistics()
 
     return statistics ;
 

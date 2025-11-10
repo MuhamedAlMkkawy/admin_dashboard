@@ -10,19 +10,14 @@ export class StatisticsService {
   constructor(@InjectRepository(Statistics) private repo : Repository<Statistics>) {}
 
   // [ 1 ] Get All Statistics
-  async getStatistics (lang : string) {
+  async getStatistics () {
     const statistics = await this.repo.find()
 
     if(!statistics){
       throw new NotFoundException('No Data Found')
     }
 
-    const statisticsData = statistics.map(statistics => ({
-      ...statistics,
-      title : statistics.title[lang]
-    }))
-
-    return statisticsData
+    return statistics
   }
 
 

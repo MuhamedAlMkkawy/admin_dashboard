@@ -7,6 +7,7 @@ import * as express from 'express';
 import { join } from 'path';
 import { AuthGuard } from './guards/auth.guard';
 import { PermissionsGuard } from './guards/permissions.guard';
+import { LanguageInterceptor } from './interceptors/languageHandle.interceptor';
 
 
 const cookieSession = require('cookie-session')
@@ -27,10 +28,11 @@ async function bootstrap() {
   // TO MAKE TIMEOUT FOR THE SERVER REQUEST
   app.useGlobalInterceptors(new TimeoutInterceptor());
 
-    // 👇 Interceptor لتوحيد رسائل النجاح
+  // Interceptor لتوحيد رسائل النجاح
   app.useGlobalInterceptors(new ResponseInterceptor());
 
-  // console.log('✅ ENV MONGODB_URI:', process.env.MONGO_URL);
+  // To handle the responce depend on the language
+  app.useGlobalInterceptors(new LanguageInterceptor());
 
 
   // TO MAKE THE APP USE THE COOKIE SESSIONS
@@ -40,7 +42,7 @@ async function bootstrap() {
 
   app.useGlobalGuards(new AuthGuard() , new PermissionsGuard())
 
-  // 👇 Filter لتوحيد رسائل الخطأ
+  //  Filter لتوحيد رسائل الخطأ
   // app.useGlobalFilters(new AllExceptionsFilter());
 
   // Serve uploaded files

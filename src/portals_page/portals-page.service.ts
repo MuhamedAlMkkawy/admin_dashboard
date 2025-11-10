@@ -15,8 +15,8 @@ export class PortalsPageService {
     if(!data) {
       throw new NotFoundException('No Content Found!!')
     }
-
-    return data
+    
+    return data;
   }
 
 
@@ -39,30 +39,31 @@ export class PortalsPageService {
 
 
   // [ 3 ] Update Portals Page 's Content
-  async updatePortalsPageData(body: UpdatePortalsPageDto) {
-    console.log(body)
-    // جلب بيانات الصفحة الموجودة (نفترض دائماً عنصر واحد)
+  async updatePortalsPageData(body: any) {
     const portalsPage = await this.repo.find();
+    
     if (!portalsPage || portalsPage.length === 0) {
       throw new BadRequestException("Portals Page Data Not Found!!");
     }
 
     const portalsID = portalsPage[0]._id;
 
-    // جلب البيانات القديمة
+    
     const existingPortals = await this.repo.findOneBy({ _id: portalsID });
     if (!existingPortals) {
       throw new NotFoundException("Portals Page's Data isn't Found!!!");
     }
 
 
-    // // حفظ البيانات المحدثة
-    // const savedData = await this.repo.update(portalsID , body);
+    const newData = merge({}, existingPortals, body);
 
-    // return {
-    //   message: "Portals Page's Data is Updated Successfully..",
-    //   data: savedData,
-    // };
+
+    const savedData = await this.repo.save(newData);
+
+    return {
+      message: "Portals Page's Data is Updated Successfully..",
+      data: savedData,
+    };
   }
 }
 

@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, NotFoundException, Patch, Post, UploadedFile, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, NotFoundException, Patch, Post, Req, UploadedFile, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { PortalsPageService } from './portals-page.service';
 import { AnyFilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -8,6 +8,8 @@ import { MergeFileFieldsInterceptor } from 'src/interceptors/mergeFileFields.int
 import { CreatePortalsPageDto } from './dtos/createPortalsPageData.dto';
 import { plainToClass } from 'class-transformer';
 import { UpdatePortalsPageDto } from './dtos/updatePortalsPageData.dto';
+import { Console } from 'console';
+import { LanguageInterceptor } from 'src/interceptors/languageHandle.interceptor';
 
 @Controller('portals_page')
 export class PortalsPageController {
@@ -15,7 +17,8 @@ export class PortalsPageController {
   
   // [ 1 ] Get Portals Page 's Content
   @Get()
-  async getPortalsPageData () {
+  @UseInterceptors(LanguageInterceptor)
+  async getPortalsPageData (){ 
     const data = await this.portalsPageService.getPortalsPageData()
 
     return data;
@@ -50,9 +53,22 @@ export class PortalsPageController {
       throw new BadRequestException('You Must Add data to Continue...')
     }
 
-    const data = plainToClass(CreatePortalsPageDto , body)
+    const data = plainToClass(CreatePortalsPageDto, body)
 
-    return this.portalsPageService.createPortalsPageData(data)
+
+    const portalsData = {
+      ...data,
+      portals: data.portals.map((item, index) => ({
+        ...item,
+        id: index + 1
+      })),
+      mockup : {
+        id : 1,
+        ...data.mockup,
+      }
+    }
+
+    return this.portalsPageService.createPortalsPageData(portalsData)
   }
 
 

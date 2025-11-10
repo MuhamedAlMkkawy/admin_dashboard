@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { Column, Entity, ObjectIdColumn } from "typeorm";
+import { Column, Entity, ObjectIdColumn, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class PortalsPage {
@@ -18,6 +18,7 @@ export class PortalsPage {
 
   @Column()
   mockup : {
+    id : number 
     title : {en : string , ar :string}
     description : {en : string , ar :string}
     button : {title : {en : string , ar :string} , link : string}
