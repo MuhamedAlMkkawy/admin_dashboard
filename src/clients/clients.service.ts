@@ -2,9 +2,9 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { Clients } from './entities/clients.entities';
 import { Repository } from 'typeorm';
-import { CreateClientsSectionDto } from './dtos/createClients.dto';
-import { UpdateClientsSectionDto } from './dtos/updateClients.dto';
-
+import { CreateClientsDto } from './dtos/createClients.dto';
+import { UpdateClientsDto } from './dtos/updateClients.dto';
+import {merge} from 'lodash'
 @Injectable()
 export class ClientsService {
   constructor(@InjectRepository(Clients) private repo : Repository<Clients>) {}
@@ -23,7 +23,7 @@ export class ClientsService {
 
 
   // [ 2 ] POST Clients Section
-  async postClients (data : CreateClientsSectionDto) {
+  async postClients (data : CreateClientsDto) {
     const clientsSection = await this.repo.find()
 
 
@@ -31,12 +31,9 @@ export class ClientsService {
     if(clientsSection.length > 0){
       throw new BadRequestException('Clients Section Already Added');
     }
-    const clientsData = {
-      _id : 1 ,
-      ...data
-    }
 
-    const newClientsSection = await this.repo.save(this.repo.create(clientsData))
+
+    const newClientsSection = await this.repo.save(this.repo.create(data))
     
     return newClientsSection;
   }
@@ -45,19 +42,20 @@ export class ClientsService {
 
 
   // [ 3 ] UPDATE Clients Section
-  async updateClients(data : UpdateClientsSectionDto){
+  async updateClients(data : UpdateClientsDto){
     const clients = await this.repo.find();
 
     if(!data){
       throw new BadRequestException('No data provided to update clients section');
     }
 
-    const clientsSectionID = clients[0]._id
+    const updatedData = merge({} , clients[0] , data)
+    const updated = await this.repo.save(updatedData)
 
-    await this.repo.update({_id : clientsSectionID}, data)
+
     return {
       message : 'Client Section Updated Successfully',
-      data : await this.repo.findOneBy({_id : clientsSectionID})
+      data : updated
     }
   }
 }

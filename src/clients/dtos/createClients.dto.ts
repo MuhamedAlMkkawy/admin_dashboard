@@ -1,12 +1,26 @@
-import { IsArray, IsString } from "class-validator";
+import { Type } from 'class-transformer';
+import { IsArray, IsString, ValidateNested } from 'class-validator';
 
-export class CreateClientsSectionDto {
+// ---- Nested DTO for language strings ----
+export class LangStringDto {
   @IsString()
-  name: string;
-  
+  ar: string;
+
   @IsString()
-  title: string;
+  en: string;
+}
+
+// ---- Main DTO for creating Clients ----
+export class CreateClientsDto {
+  @ValidateNested()
+  @Type(() => LangStringDto)
+  name: LangStringDto;
+
+  @ValidateNested()
+  @Type(() => LangStringDto)
+  title: LangStringDto;
 
   @IsArray()
-  images : string[];
+  @IsString({ each: true })
+  images: string[];
 }

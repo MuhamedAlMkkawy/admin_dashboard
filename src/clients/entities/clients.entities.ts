@@ -8,10 +8,10 @@ export class Clients {
 
 
   @Column()
-  name : string;
+  name : {ar : string , en : string };
 
   @Column()
-  title : string;
+  title : {ar : string , en : string };
 
   @Column()
   images : string[];

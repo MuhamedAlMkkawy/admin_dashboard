@@ -1,10 +1,11 @@
-import { Body, Controller, Get, Patch, Post, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Patch, Post, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { ClientsService } from './clients.service';
-import { CreateClientsSectionDto } from './dtos/createClients.dto';
+import { CreateClientsDto } from './dtos/createClients.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { plainToClass } from 'class-transformer';
+import { TransformFlatToNestedInterceptor } from 'src/interceptors/TransformFlatToNested.interceptor';
 
 @Controller('clients')
   @UseInterceptors(
@@ -40,12 +41,14 @@ export class ClientsController {
 
   // [ 2 ] POST Clients Section
   @Post()
+  @UseInterceptors(TransformFlatToNestedInterceptor)
   async postClients (@Body() body : any , @UploadedFiles() files : Array<Express.Multer.File>) {
 
     const clientsData = {
       ...body,
       images : files.map((file, index) => ({id : index+1 ,url: `/uploads/${file.filename}`}))
     }
+
 
     const newClientsSection = await this.clientsService.postClients(clientsData)
     
@@ -57,16 +60,19 @@ export class ClientsController {
 
   // [ 3 ] UPDATE Clients Section
   @Patch()
+  @UseInterceptors(TransformFlatToNestedInterceptor)
   async updateClientsSection (@Body() body : any , @UploadedFiles() files : Array<Express.Multer.File>) {
+
+    if(!body){
+      throw new BadRequestException('You should add Data to continue...')
+    }
+
 
     if(files?.length){
       body.images = files.map((file, index) => ({id : index+1 ,url: `/uploads/${file.filename}`}))
     }
 
-    const cleanBody = Object.assign({}, body);
-
-
-    const updatedClientSection = await this.clientsService.updateClients(cleanBody)
+    const updatedClientSection = await this.clientsService.updateClients(body)
 
 
     return updatedClientSection
