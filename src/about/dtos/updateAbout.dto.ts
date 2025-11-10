@@ -6,7 +6,7 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
-// ─── Reusable Sub-DTOs ────────────────────────────────
+// Reusable Sub-DTOs 
 export class ButtonDto {
   @IsString()
   @IsOptional()
@@ -27,7 +27,7 @@ export class PortalOfferDto {
   description?: string;
 }
 
-// ─── Main Sections ────────────────────────────────────
+// Main Sections 
 export class HeroSectionDto {
   @IsString()
   @IsOptional()
@@ -103,7 +103,7 @@ export class SchoolnaJourneyDto {
   buttons?: ButtonDto[];
 }
 
-// ─── Root Update DTO ──────────────────────────────────
+// ---- Main Update DTO -----
 export class UpdateAboutDto {
   @ValidateNested()
   @Type(() => HeroSectionDto)

@@ -5,6 +5,7 @@ import { TransformFlatToNestedInterceptor } from 'src/interceptors/TransformFlat
 import { extname } from 'path';
 import { diskStorage } from 'multer';
 import { AnyFilesInterceptor } from '@nestjs/platform-express';
+import { CreateAboutDto } from './dtos/createAbout.dto';
 
 @Controller('about')
 export class AboutController {
@@ -36,7 +37,7 @@ export class AboutController {
     TransformFlatToNestedInterceptor,
     MergeFileFieldsInterceptor
   )
-  async createAboutPage (@Body() body : any , @UploadedFiles() files : Array<Express.Multer.File>) {
+  async createAboutPage (@Body() body : CreateAboutDto) {
     if(!body){
       throw new BadRequestException('You Must Add Data to Continue...')
     }

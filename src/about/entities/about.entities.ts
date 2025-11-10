@@ -9,32 +9,32 @@ export class About {
   
   @Column()
   heroSection : {
-    badge : string
-    title : string
-    description : string
-    buttons : {title : string , link : string}[]
+    badge : {ar : string , en : string}
+    title : {ar : string , en : string}
+    description : {ar : string , en : string}
+    buttons : {title : {ar : string , en : string} , link : string}[]
   }
 
   @Column()
   offers : {
-    badge : string
-    title : string
-    portalsOffers : {title : string , description : string}[]
+    badge : {ar : string , en : string}
+    title : {ar : string , en : string}
+    portalsOffers : {title : {ar : string , en : string} , description : {ar : string , en : string}}[]
   }
   
   @Column()
   whyChooseUs : {
-    badge : string
-    title : string
-    description : string
-    button : {title : string , link : string}
+    badge : {ar : string , en : string}
+    title : {ar : string , en : string}
+    description : {ar : string , en : string}
+    button : {title : {ar : string , en : string} , link : string}
     video : string
   }
   
   @Column()
   schoolnaJourney : {
-    title : string
-    description : string 
-    buttons : {title : string , link : string}[]
+    title : {ar : string , en:string}
+    description : {ar : string , en:string} 
+    buttons : {title : {ar : string , en:string} , link : string}[]
   }
 }
