@@ -1,12 +1,40 @@
-import { IsArray, IsString } from "class-validator";
+import { Type } from 'class-transformer';
+import { IsArray, IsNumber, IsString, ValidateNested } from 'class-validator';
 
-export class CreateFaqDto{
+// ---- Nested DTOs ----
+export class LangStringDto {
   @IsString()
-  badge : string;
-  
+  ar: string;
+
   @IsString()
-  title : string
+  en: string;
+}
+
+export class FaqItemDto {
+  @IsNumber()
+  id: number;
+
+  @ValidateNested()
+  @Type(() => LangStringDto)
+  question: LangStringDto;
+
+  @ValidateNested()
+  @Type(() => LangStringDto)
+  answer: LangStringDto;
+}
+
+// ---- Main DTO ----
+export class CreateFaqDto {
+  @ValidateNested()
+  @Type(() => LangStringDto)
+  badge: LangStringDto;
+
+  @ValidateNested()
+  @Type(() => LangStringDto)
+  title: LangStringDto;
 
   @IsArray()
-  items : string[]
+  @ValidateNested({ each: true })
+  @Type(() => FaqItemDto)
+  items: FaqItemDto[];
 }

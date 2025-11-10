@@ -7,11 +7,15 @@ export class Faq{
   _id : ObjectId;
 
   @Column()
-  badge : string;
+  badge : {ar : string , en : string};
 
   @Column()
-  title : string
+  title : {ar : string , en : string}
 
   @Column()
-  items : string[]
+  items : {
+    id : number 
+    question : {ar : string , en : string}
+    answer : {ar : string , en : string}
+  }[]
 }

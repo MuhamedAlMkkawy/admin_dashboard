@@ -5,8 +5,10 @@ import { TransformFlatToNestedInterceptor } from 'src/interceptors/TransformFlat
 import { CreateFaqDto } from './dtos/createFaq.dto';
 
 @Controller('faq')
-@UseInterceptors(TransformFlatToNestedInterceptor)
-@UseInterceptors(FileInterceptor(''))
+@UseInterceptors(
+  FileInterceptor('') ,
+  TransformFlatToNestedInterceptor
+)
 export class FaqController {
   constructor(private faqService : FaqService){}
 
@@ -22,8 +24,13 @@ export class FaqController {
 
   // [ 2 ] Create Faq Section 
   @Post()
-  async createFaqSection (@Body() body : CreateFaqDto ){
-    const createdFaq = await this.faqService.createFaqSection(body)
+  async createFaqSection (@Body() body : any ){
+    const data = {
+      ...body,
+      items : body.items.map((item , index) => ({id : index+1 , ...item}))
+    }
+
+    const createdFaq = await this.faqService.createFaqSection(data)
 
     return createdFaq
   }
@@ -32,11 +39,10 @@ export class FaqController {
   // [ 3 ] Update Faq Section 
   @Patch()
   async updateFaqSection(@Body() body : any){
-    if (!body.badge && !body.title && (!body.items || body.items.length === 0)) {
-      throw new BadRequestException('Body cannot be empty');
+    if (!body) {
+      throw new BadRequestException('You should add data to continue');
     }
     
-
     return this.faqService.updateFaq(body);
   }
 }

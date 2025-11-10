@@ -4,6 +4,8 @@ import { Faq } from './entities/faq.entities';
 import { Repository } from 'typeorm';
 import { CreateFaqDto } from './dtos/createFaq.dto';
 import { UpdateFaqDto } from './dtos/updateFaq.dto';
+import {merge} from 'lodash'
+
 
 @Injectable()
 export class FaqService {
@@ -44,14 +46,14 @@ export class FaqService {
     if(!faqSection){
       throw new NotFoundException('Faq Section isn\'t Found')
     }
+    const updatedData = merge({} , faqSection[0] , data)
 
-    const faqSectionID = faqSection[0]._id
 
-    await this.repo.update({_id : faqSectionID} , data)
+    const updated = await this.repo.save(updatedData)
 
     return{
       message : 'Faq Section Updated Successfully!',
-      data : await this.repo.findOneBy({_id : faqSectionID})
+      data : updated
     }
   }
 }
