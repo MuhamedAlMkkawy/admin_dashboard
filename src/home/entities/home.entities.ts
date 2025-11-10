@@ -8,25 +8,28 @@ export class Home {
 
   @Column()
   heroSection: {
-    title: string;
-    description: string;
-    buttons: { title: string; link: string }[];
+    id : number
+    title: {ar : string , en : string};
+    description: {ar : string , en : string};
+    buttons: { title: {ar : string , en : string}; link: string }[];
     image: string;
   };
 
   @Column()
   getMore: {
-    badge: string;
-    title: string;
-    description: string;
-    buttons: string[];
+    id : number
+    badge: {ar : string , en : string};
+    title: {ar : string , en : string};
+    description: {ar : string , en : string};
+    buttons: { title: {ar : string , en : string}; link: string }[];
   };
 
   @Column()
   portals: {
-    badge: string;
-    title: string;
-    description: string;
+    id : number
+    badge: {ar : string , en : string};
+    title: {ar : string , en : string};
+    description: {ar : string , en : string};
     image: string;
   }[];
 }

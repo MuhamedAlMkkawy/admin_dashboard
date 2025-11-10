@@ -5,6 +5,7 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { TransformFlatToNestedInterceptor } from 'src/interceptors/TransformFlatToNested.interceptor';
 import { MergeFileFieldsInterceptor } from 'src/interceptors/mergeFileFields.interceptor';
+import { CreateHomeDto } from './dtos/CreateHomeDto.dto';
 
 @Controller('home')
 export class HomeController {
@@ -43,8 +44,14 @@ export class HomeController {
     TransformFlatToNestedInterceptor,
     MergeFileFieldsInterceptor
   )
-  async createHomePage(@Body() body : any , @UploadedFiles() files?: Array<Express.Multer.File>){
-    const homeSection = await this.homeService.createHomePage(body)
+  async createHomePage(@Body() body : CreateHomeDto){
+    const data = {
+      heroSection : { id : 1 , ...body.heroSection },
+      getMore : { id : 1 , ...body.getMore },
+      portals: body.portals.map((item, index) => ({  id: index + 1 ,  ...item })),
+    }
+
+    const homeSection = await this.homeService.createHomePage(data)
 
 
     return homeSection;
@@ -73,11 +80,10 @@ export class HomeController {
     TransformFlatToNestedInterceptor,
     MergeFileFieldsInterceptor
   )
-  async updateHomePage(@Body() body : any , @UploadedFiles() files : Array<Express.Multer.File>) {
+  async updateHomePage(@Body() body : any) {
     if(!body) {
       throw new BadRequestException('No Data Found To Update')
     }
-
     const updatedData = await this.homeService.updateHomePage(body)
 
     return updatedData;

@@ -29,6 +29,7 @@ export class HomeService {
     if(home.length > 0){
       throw new BadRequestException('Home Page Already Added')
     }
+
     const createdPage = this.repo.create(body)
     const savedPage = await this.repo.save(createdPage)
     

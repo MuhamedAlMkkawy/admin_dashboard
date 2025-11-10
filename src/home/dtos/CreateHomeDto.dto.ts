@@ -1,24 +1,34 @@
-import {
-  IsArray,
-  IsString,
-  ValidateNested,
-} from 'class-validator';
+import { IsArray, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
-export class ButtonDto {
+// ---- Nested DTOs ----
+
+class LangStringDto {
   @IsString()
-  title: string;
+  ar: string;
+
+  @IsString()
+  en: string;
+}
+
+class ButtonDto {
+  @ValidateNested()
+  @Type(() => LangStringDto)
+  title: LangStringDto;
 
   @IsString()
   link: string;
 }
 
-export class HeroSectionDto {
-  @IsString()
-  title: string;
+class HeroSectionDto {
 
-  @IsString()
-  description: string;
+  @ValidateNested()
+  @Type(() => LangStringDto)
+  title: LangStringDto;
+
+  @ValidateNested()
+  @Type(() => LangStringDto)
+  description: LangStringDto;
 
   @IsArray()
   @ValidateNested({ each: true })
@@ -29,34 +39,44 @@ export class HeroSectionDto {
   image: string;
 }
 
-export class GetMoreDto {
-  @IsString()
-  badge: string;
+class GetMoreDto {
 
-  @IsString()
-  title: string;
+  @ValidateNested()
+  @Type(() => LangStringDto)
+  badge: LangStringDto;
 
-  @IsString()
-  description: string;
+  @ValidateNested()
+  @Type(() => LangStringDto)
+  title: LangStringDto;
+
+  @ValidateNested()
+  @Type(() => LangStringDto)
+  description: LangStringDto;
 
   @IsArray()
-  @IsString({ each: true })
-  buttons: string[];
+  @ValidateNested({ each: true })
+  @Type(() => ButtonDto)
+  buttons: ButtonDto[];
 }
 
-export class PortalDto {
-  @IsString()
-  badge: string;
+class PortalDto {
+  @ValidateNested()
+  @Type(() => LangStringDto)
+  badge: LangStringDto;
 
-  @IsString()
-  title: string;
+  @ValidateNested()
+  @Type(() => LangStringDto)
+  title: LangStringDto;
 
-  @IsString()
-  description: string;
+  @ValidateNested()
+  @Type(() => LangStringDto)
+  description: LangStringDto;
 
   @IsString()
   image: string;
 }
+
+// ---- Main DTO ----
 
 export class CreateHomeDto {
   @ValidateNested()
