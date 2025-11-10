@@ -5,6 +5,9 @@ import { Repository } from 'typeorm';
 import { CreateAboutDto } from './dtos/createAbout.dto';
 import { UpdateAboutDto } from './dtos/updateAbout.dto';
 import {merge} from 'lodash'
+
+
+
 @Injectable()
 export class AboutService {
   constructor(@InjectRepository(About) private repo : Repository<About>){}
@@ -34,7 +37,7 @@ export class AboutService {
     const savedPage = await this.repo.save(createdPage)
 
     return {
-      message : 'About Page \'s Data Is Addedd Successfully',
+      message : 'About Page \'s Data Is Added Successfully',
       data : savedPage
     }
   }
