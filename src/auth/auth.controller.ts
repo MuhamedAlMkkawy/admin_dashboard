@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Patch, Post, Session, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Patch, Post, Session, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { TransformFlatToNestedInterceptor } from 'src/interceptors/TransformFlatToNested.interceptor';
 import { MergeFileFieldsInterceptor } from 'src/interceptors/mergeFileFields.interceptor';
@@ -48,12 +48,17 @@ export class AuthController {
 
 
   // [ 2 ] Login
-  @Post('/login')
+  @Post('login')
   @UseInterceptors(FileInterceptor(''))
   @Serialize(AuthResponce)
   async login (@Body() body : LoginDto , @Session() session : any) {
-    const user = await this.authService.login(body)
+    if(session.user_token){
+      throw new BadRequestException('You are already logged in')
+    }
 
+    
+    const user = await this.authService.login(body)
+    
     session.user_token = user.token
     session.role = user.role
 
@@ -63,9 +68,11 @@ export class AuthController {
 
 
   // [ 3 ] Logout
-  @Delete('/logout')
+  @Delete('logout')
   async logout(@Session() session : any){
-    session.user_token = null 
+    if(session.user_token){
+      session.user_token = null 
+    }
 
     return{
       message : 'You have logged out successfully!',
@@ -75,7 +82,7 @@ export class AuthController {
 
 
   // [ 4 ] Forget Password
-  @Patch('/change_password')
+  @Patch('change_password')
   @UseInterceptors(FileInterceptor(''))
   async forgetPassword(@Body() body : ChangePasswordDto , @Session() session : any){
     const user = await this.authService.changePassword(body , session.user_token)

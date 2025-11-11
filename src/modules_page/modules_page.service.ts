@@ -17,7 +17,7 @@ export class ModulesPageService {
       throw new NotFoundException('No Content Found')
     }
 
-    return modulesPage
+    return modulesPage[0]
   }
 
 

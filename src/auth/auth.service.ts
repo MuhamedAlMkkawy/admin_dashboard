@@ -73,7 +73,7 @@ export class AuthService {
     if(hash.toString('hex') !== hashedPassword){
       throw new BadRequestException('Email / Password is\'nt Correct');
     }
-
+    
     return existingUser
   }
 

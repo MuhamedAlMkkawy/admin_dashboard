@@ -7,14 +7,11 @@ export class AuthGuard implements CanActivate {
     // console.log('AuthGuard - User Token:', request.session.userToken);
 
     const openRoutes = ['/login', '/signup' , '/change_password'];
-    if (openRoutes.includes(request.path)) {
-      return true; // allow without token
+    if (openRoutes.some(route => request.path.startsWith(route))) {
+      return true;
     }
 
-    if(request.method === 'DELETE' && request.path !== '/logout' && request.session?.role === 1){
-      throw new ForbiddenException('You do not have the permission to perform this action');
-    }
 
-    return request.session.user_token;
+    return !!request.session.user_token;
   }
 }

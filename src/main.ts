@@ -34,13 +34,14 @@ async function bootstrap() {
   // To handle the responce depend on the language
   app.useGlobalInterceptors(new LanguageInterceptor());
 
+  app.useGlobalGuards(new AuthGuard(), new PermissionsGuard());
 
   // TO MAKE THE APP USE THE COOKIE SESSIONS
   app.use(cookieSession({
-    keys : ['user_token']
+    keys : ['user_token'],
+    maxAge : 24 * 60 * 60 * 1000 // 1 day
   }));
 
-  app.useGlobalGuards(new AuthGuard() , new PermissionsGuard())
 
   //  Filter لتوحيد رسائل الخطأ
   // app.useGlobalFilters(new AllExceptionsFilter());
