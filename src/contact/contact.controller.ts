@@ -1,12 +1,16 @@
 import { BadRequestException, Body, Controller, Get, Patch, Post, UseInterceptors } from '@nestjs/common';
 import { ContactService } from './contact.service';
-import { AnyFilesInterceptor } from '@nestjs/platform-express';
+import { AnyFilesInterceptor, FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { TransformFlatToNestedInterceptor } from 'src/interceptors/TransformFlatToNested.interceptor';
 import { MergeFileFieldsInterceptor } from 'src/interceptors/mergeFileFields.interceptor';
+import { Serialize } from 'src/interceptors/dataSerializor.interceptor';
+import { ContactResponseDto } from './dto/ContactResponce.dto';
+
 
 @Controller('/contact')
+@Serialize(ContactResponseDto)
 export class ContactController {
   constructor (private contactService : ContactService) {}
 

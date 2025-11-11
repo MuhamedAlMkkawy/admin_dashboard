@@ -29,6 +29,8 @@ import { ModulesPageModule } from './modules_page/modules_page.module';
 import { ModulesPage } from './modules_page/entities/modulesPage.entitites';
 import { ContactModule } from './contact/contact.module';
 import { Contact } from './contact/entitites/contact.entities';
+import { DemoRequestsModule } from './demo_requests/demo_requests.module';
+import { DemoRequests } from './demo_requests/entities/demo_request.entities';
 
 @Module({
   imports: [
@@ -54,7 +56,8 @@ import { Contact } from './contact/entitites/contact.entities';
         Users,
         FeaturesPage,
         ModulesPage,
-        Contact
+        Contact,
+        DemoRequests
       ],
     }),
     PagesModule,
@@ -69,7 +72,8 @@ import { Contact } from './contact/entitites/contact.entities';
     AuthModule,
     FeaturesPageModule,
     ModulesPageModule,
-    ContactModule
+    ContactModule,
+    DemoRequestsModule
   ],
   controllers: [AppController],
   providers: [AppService],
