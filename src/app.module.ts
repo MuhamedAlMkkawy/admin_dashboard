@@ -25,6 +25,8 @@ import { AuthModule } from './auth/auth.module';
 import { Users } from './auth/entities/users.entities';
 import { FeaturesPageModule } from './features_page/features_page.module';
 import { FeaturesPage } from './features_page/entities/FeaturesPage.entities';
+import { ModulesPageModule } from './modules_page/modules_page.module';
+import { ModulesPage } from './modules_page/entities/modulesPage.entitites';
 
 @Module({
   imports: [
@@ -48,7 +50,8 @@ import { FeaturesPage } from './features_page/entities/FeaturesPage.entities';
         About,
         PortalsPage,
         Users,
-        FeaturesPage
+        FeaturesPage,
+        ModulesPage
       ],
     }),
     PagesModule,
@@ -61,7 +64,8 @@ import { FeaturesPage } from './features_page/entities/FeaturesPage.entities';
     AboutModule,
     PortalsPageModule,
     AuthModule,
-    FeaturesPageModule
+    FeaturesPageModule,
+    ModulesPageModule
   ],
   controllers: [AppController],
   providers: [AppService],

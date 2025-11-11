@@ -63,7 +63,7 @@ export class FeaturesPageController {
 
   // [ 3 ] UPDATE THE FEATURES PAGE DATA
   @Patch()
-    @UseInterceptors(
+  @UseInterceptors(
     AnyFilesInterceptor({
       storage: diskStorage({
         destination: './uploads',
