@@ -25,7 +25,8 @@ export class AuthService {
   async signup (body : SignUpDto){
     // [ 1 ] Check if the user is found 
     const users = await this.repo.find();
-
+    console.log(body.email)
+    console.log(users.map(user => user.email))
     const existingUser = users.find(user => user.email === body.email);
     if (existingUser) {
       throw new BadRequestException('User Already Exists');
