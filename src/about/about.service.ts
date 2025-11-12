@@ -36,10 +36,7 @@ export class AboutService {
     const createdPage = this.repo.create(body)
     const savedPage = await this.repo.save(createdPage)
 
-    return {
-      message : 'About Page \'s Data Is Added Successfully',
-      data : savedPage
-    }
+    return savedPage
   }
 
 
@@ -66,9 +63,6 @@ export class AboutService {
 
     const savedData = await this.repo.save(updated)
 
-    return {
-      message : 'About Page Is Updated Successfully',
-      data : savedData
-    }
+    return savedData
   }
 }
